@@ -37,21 +37,19 @@ def isWebEditor(obj) -> bool:
 		return False
 	
 	# Check for common ARIA roles used in web editors
-	if hasattr(obj, 'ariaProperties'):
-		ariaProps = getattr(obj, 'ariaProperties', {})
-		if ariaProps:
-			# Check for textbox role with multiline
-			role = ariaProps.get('role', '')
-			if 'textbox' in role.lower():
-				return True
+	ariaProps = getattr(obj, 'ariaProperties', {})
+	if ariaProps:
+		# Check for textbox role with multiline
+		role = ariaProps.get('role', '')
+		if 'textbox' in role.lower():
+			return True
 	
 	# Check for contentEditable attribute (common in web editors)
-	if hasattr(obj, 'IA2Attributes'):
-		ia2Attrs = getattr(obj, 'IA2Attributes', {})
-		if ia2Attrs:
-			# contentEditable is a common attribute for web editors
-			if 'contentEditable' in ia2Attrs or 'contenteditable' in ia2Attrs:
-				return True
+	ia2Attrs = getattr(obj, 'IA2Attributes', {})
+	if ia2Attrs:
+		# contentEditable is a common attribute for web editors
+		if 'contentEditable' in ia2Attrs or 'contenteditable' in ia2Attrs:
+			return True
 	
 	return False
 
@@ -77,16 +75,15 @@ def getCMSEditorType(obj) -> Optional[str]:
 			return 'ckeditor'
 	
 	# TinyMCE has its own identifiers
-	if hasattr(obj, 'IA2Attributes'):
-		ia2Attrs = getattr(obj, 'IA2Attributes', {})
-		if ia2Attrs:
-			htmlId = ia2Attrs.get('id', '').lower()
-			if 'tinymce' in htmlId or 'mce' in htmlId:
-				return 'tinymce'
-			elif 'ckeditor' in htmlId or 'cke' in htmlId:
-				return 'ckeditor'
-			# WordPress Gutenberg editor
-			elif 'gutenberg' in htmlId or 'block-editor' in htmlId:
-				return 'gutenberg'
+	ia2Attrs = getattr(obj, 'IA2Attributes', {})
+	if ia2Attrs:
+		htmlId = ia2Attrs.get('id', '').lower()
+		if 'tinymce' in htmlId or htmlId.startswith('mce'):
+			return 'tinymce'
+		elif 'ckeditor' in htmlId or 'cke' in htmlId:
+			return 'ckeditor'
+		# WordPress Gutenberg editor
+		elif 'gutenberg' in htmlId or 'block-editor' in htmlId:
+			return 'gutenberg'
 	
 	return None
