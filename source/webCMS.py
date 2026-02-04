@@ -40,8 +40,9 @@ def isWebEditor(obj) -> bool:
 	ariaProps = getattr(obj, 'ariaProperties', {})
 	if ariaProps:
 		# Check for textbox role with multiline
-		role = ariaProps.get('role', '')
-		if 'textbox' in role.lower():
+		role = ariaProps.get('role', '').lower()
+		# Check for exact match or as a word in space-separated role list
+		if role == 'textbox' or 'textbox' in role.split():
 			return True
 	
 	# Check for contentEditable attribute (common in web editors)
@@ -71,7 +72,8 @@ def getCMSEditorType(obj) -> Optional[str]:
 	# CKEditor typically has specific class names or identifiers
 	if hasattr(obj, 'windowClassName'):
 		className = obj.windowClassName.lower()
-		if 'cke' in className:
+		# Check for CKEditor-specific patterns (cke_ or cke- prefixes)
+		if 'cke_' in className or 'cke-' in className or className.startswith('cke'):
 			return 'ckeditor'
 	
 	# TinyMCE has its own identifiers
