@@ -78,7 +78,7 @@ def getCMSEditorType(obj) -> Optional[str]:
 	ia2Attrs = getattr(obj, 'IA2Attributes', {})
 	if ia2Attrs:
 		htmlId = ia2Attrs.get('id', '').lower()
-		if 'tinymce' in htmlId or htmlId.startswith('mce'):
+		if 'tinymce' in htmlId or htmlId.startswith('mce_') or htmlId.startswith('mce-'):
 			return 'tinymce'
 		elif 'ckeditor' in htmlId or 'cke' in htmlId:
 			return 'ckeditor'
